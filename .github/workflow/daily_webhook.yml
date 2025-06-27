@@ -2,7 +2,7 @@ name: Daily 7 AM Webhook Trigger
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # Runs at 7:00 AM UTC every day
+    - cron: '*/5 * * * *'  # Runs at 7:00 AM UTC every day
   workflow_dispatch:     # (Optional) Allows manual triggering
 
 jobs:
