@@ -1,19 +1,21 @@
-name: Daily 7 AM Webhook Trigger
+name: Fast Webhook Trigger (30s Loop)
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # Runs at 7:00 AM UTC every day
-  workflow_dispatch:     # (Optional) Allows manual triggering
+    - cron: '*/5 * * * *'  # Runs every 5 minutes
+  workflow_dispatch:       # Allow manual runs
 
 jobs:
-  call-webhook:
+  rapid-webhook:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Webhook
+      - name: Loop and Trigger Every 30s
         run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -H "X-GitHub-Event: scheduled" \
-            -H "X-Hub-Signature-256: sha256=$(echo -n '{"time":"7am"}' | openssl dgst -sha256 -hmac "${{ secrets.WEBHOOK_SECRET }}" | awk '{print $2}')" \
-            -d '{"time": "7am"}' \
-            https://pcms.epizy.com/portal/required/birthday_students.php
+          for i in {1..10}; do
+            curl -X POST \
+              -H "Content-Type: application/json" \
+              -H "X-GitHub-Event: rapid-ping" \
+              -d '{"interval": "30s"}' \
+              https://pcms.epizy.com/portal/webhooktest.php
+            sleep 30  # Wait 30 seconds
+          done
